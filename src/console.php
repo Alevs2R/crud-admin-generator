@@ -140,6 +140,11 @@ $console
 			$TABLECOLUMNS_INITIALDATA_ARRAY = "";
 
 			$EXTERNALS_FOR_LIST = "";
+
+            $EXTERNAL_FIELDS = "";
+            $EXTERNAL_WHERE = "";
+            $EXTERNAL_JOIN = "";
+
 			$EXTERNALSFIELDS_FOR_FORM = "";
 			$FIELDS_FOR_FORM = "";
 
@@ -223,6 +228,12 @@ $console
 					}
 
 					$external_cond = $count_externals > 0 ? "else if" : "if";
+
+
+                    $EXTERNAL_FIELDS .= ", {$table_column['external']}.{$external_select_field} as {$table_column['name']}";
+                    $EXTERNAL_WHERE .= " OR {$table_column['external']}.{$external_select_field} LIKE '%{\$searchValue}%'";
+                    $EXTERNAL_JOIN .= " JOIN {$table_column['external']} ON {$table_column['external']}.{$external_primary_key} = {$table_name}.{$table_column['name']}";
+
 
 					$EXTERNALS_FOR_LIST .= "" .
 					"\t\t\t" . $external_cond . "(\$table_columns[\$i] == '" . $table_column['name'] . "'){" . "\n" .
@@ -330,9 +341,13 @@ $console
 
 			$_controller = str_replace("__UPDATE_QUERY_FIELDS__", $UPDATE_QUERY_FIELDS, $_controller);
 			$_controller = str_replace("__UPDATE_EXECUTE_FIELDS__", $UPDATE_EXECUTE_FIELDS, $_controller);
+            $_controller = str_replace("__EXTERNAL_FIELDS__", $EXTERNAL_FIELDS, $_controller);
+            $_controller = str_replace("__EXTERNAL_JOIN__", $EXTERNAL_JOIN, $_controller);
+            $_controller = str_replace("__EXTERNAL_WHERE__", $EXTERNAL_WHERE, $_controller);
 
 
-			$_list_template = file_get_contents(__DIR__.'/../gen/list.html.twig');
+
+            $_list_template = file_get_contents(__DIR__.'/../gen/list.html.twig');
 			$_list_template = str_replace("__TABLENAME__", $TABLENAME, $_list_template);
 			$_list_template = str_replace("__TABLENAMEUP__", ucfirst(strtolower($TABLENAME)), $_list_template);
 

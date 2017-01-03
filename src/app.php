@@ -16,7 +16,7 @@ class queryData {
 	public $recordsFiltered;
 	public $data;
 
-	function queryData() {
+	function _constructor() {
 	}
 }
 
@@ -39,10 +39,10 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 		'dbs.options' => array(
 			'db' => array(
 				'driver'   => 'pdo_mysql',
-				'dbname'   => 'DATABASE_NAME',
+				'dbname'   => 'beer',
 				'host'     => '127.0.0.1',
-				'user'     => 'DATABASE_USER',
-				'password' => 'DATABASE_PASS',
+				'user'     => 'homestead',
+				'password' => 'secret',
 				'charset'  => 'utf8',
 			),
 		)

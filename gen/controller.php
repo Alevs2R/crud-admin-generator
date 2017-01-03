@@ -63,23 +63,16 @@ __TABLECOLUMNS_TYPE_ARRAY__
             $whereClause =  $whereClause . " OR"; 
         }
         
-        $whereClause =  $whereClause . " " . $col . " LIKE '%". $searchValue ."%'";
+        $whereClause =  $whereClause . " __TABLENAME__." . $col . " LIKE '%". $searchValue ."%'";
         
         $i = $i + 1;
     }
+    $whereClause .= "__EXTERNAL_WHERE__";
     
-    $recordsTotal = $app['db']->executeQuery("SELECT * FROM `__TABLENAME__`" . $whereClause . $orderClause)->rowCount();
+    $recordsTotal = $app['db']->executeQuery("SELECT __TABLENAME__.* __EXTERNAL_FIELDS__ FROM `__TABLENAME__` __EXTERNAL_JOIN__" . $whereClause . $orderClause)->rowCount();
     
-    $find_sql = "SELECT * FROM `__TABLENAME__`". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
-    $rows_sql = $app['db']->fetchAll($find_sql, array());
-
-    foreach($rows_sql as $row_key => $row_sql){
-        for($i = 0; $i < count($table_columns); $i++){
-
-__EXTERNALS_FOR_LIST__
-
-        }
-    }    
+    $find_sql = "SELECT __TABLENAME__.* __EXTERNAL_FIELDS__ FROM `__TABLENAME__` __EXTERNAL_JOIN__". $whereClause . $orderClause . " LIMIT ". $index . "," . $rowsPerPage;
+    $rows = $app['db']->fetchAll($find_sql, array());
     
     $queryData = new queryData();
     $queryData->start = $start;
