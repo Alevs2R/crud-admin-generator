@@ -28,8 +28,10 @@
 				initComplete: function () {
                             this.api().columns().every( function () {
                                 var column = this;
+                                                                $('<br>').appendTo($(column.header()));
+
                                 var select = $('<input type="text" placeholder="Search" />')
-                                    .appendTo( $(column.footer()).empty() )
+                                    .appendTo( $(column.header()) )
                                     .on( 'change paste keyup', function () {
                                         var val = $(this).val();
                                         column

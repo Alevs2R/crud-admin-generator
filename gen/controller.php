@@ -39,7 +39,7 @@ $app->match('/__TABLENAME__/list', function (Symfony\Component\HttpFoundation\Re
     
     $orderClause = "";
     if($orderValue) {
-        $orderClause = " ORDER BY ". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
+        $orderClause = " ORDER BY __TABLENAME__.". $columns[(int)$orderValue['column']]['data'] . " " . $orderValue['dir'];
     }
     
     $table_columns = array(
