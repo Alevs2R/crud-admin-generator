@@ -57,9 +57,16 @@ __TABLECOLUMNS_TYPE_ARRAY__
     $column_search = '';
     foreach ($columns as $column){
         if($column['search']['value']){
-            $column_search .= " AND {$export_names[$column['data']]} LIKE '%{$column['search']['value']}%'";
+            $values = explode(',',$column['search']['value']);
+            $column_search .= ' AND (';
+            foreach ($values as $i=>$v) {
+                if($i > 0) $column_search .= ' OR ';
+                $column_search .= "{$export_names[$column['data']]} LIKE '".(trim($v))."%'";
+            }
+            $column_search .= ')';
         }
     }
+
     
     $whereClause = "";
     
