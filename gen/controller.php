@@ -97,6 +97,10 @@ $app->match('/__TABLENAME__/export', function (Symfony\Component\HttpFoundation\
         __TABLECOLUMNS_ARRAY__
     );
 
+    $export_names = array(
+        __TABLECOLUMNS_EXPORT_NAMES__
+    );
+
     $table_columns_type = array(
         __TABLECOLUMNS_TYPE_ARRAY__
     );
@@ -124,7 +128,7 @@ $app->match('/__TABLENAME__/export', function (Symfony\Component\HttpFoundation\
 
     $find_sql = "SELECT __TABLENAME__.* __EXTERNAL_FIELDS__ FROM `__TABLENAME__` __EXTERNAL_JOIN__". $whereClause.$orderClause;
     $rows = $app['db']->fetchAll($find_sql, array());
-    $path = exportXls($table_columns, $rows);
+    $path = exportXls($export_names, $rows);
 
     $stream = function () use ($path) {
         readfile($path);

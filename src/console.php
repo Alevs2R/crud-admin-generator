@@ -134,7 +134,8 @@ $console
 			$TABLENAME = $table_name;
 			$TABLE_PRIMARYKEY = $table['primary_key'];
 
-			$TABLECOLUMNS_ARRAY = "";
+            $TABLECOLUMNS_EXPORT_NAMES = "";
+            $TABLECOLUMNS_ARRAY = "";
 			$TABLECOLUMNS_TYPE_ARRAY = "";			
 			$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY = "";
 			$TABLECOLUMNS_INITIALDATA_ARRAY = "";
@@ -172,8 +173,9 @@ $console
 
 			$count_externals = 0;
 			foreach($table_columns as $table_column){
-				$TABLECOLUMNS_ARRAY .= "\t\t" . "'". $table_column['name'] . "', \n";
-				$TABLECOLUMNS_TYPE_ARRAY .= "\t\t" . "'". $table_column['type'] . "', \n";				
+			    $export_name = $table_column['name'];
+                $TABLECOLUMNS_ARRAY .= "\t\t" . "'". $table_column['name'] . "', \n";
+                $TABLECOLUMNS_TYPE_ARRAY .= "\t\t" . "'". $table_column['type'] . "', \n";
 				if(!$table_column['primary'] || ($table_column['primary'] && !$table_column['auto'])){
 					$TABLECOLUMNS_INITIALDATA_EMPTY_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => '', \n";
 					$TABLECOLUMNS_INITIALDATA_ARRAY .= "\t\t" . "'". $table_column['name'] . "' => \$row_sql['".$table_column['name']."'], \n";
@@ -226,6 +228,8 @@ $console
 					if(!$external_select_field){
 						$external_select_field = $external_primary_key;
 					}
+
+                    $export_name = $table_column['external'].'.'.$external_select_field;
 
 					$external_cond = $count_externals > 0 ? "else if" : "if";
 
@@ -281,7 +285,8 @@ $console
 							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . "));" . "\n";
 					}
 				}
-			}
+                $TABLECOLUMNS_EXPORT_NAMES .= "\t\t" . "'". $export_name . "', \n";
+            }
 
 			if($count_externals > 0){
 				$EXTERNALS_FOR_LIST .= "" .
@@ -344,6 +349,7 @@ $console
             $_controller = str_replace("__EXTERNAL_FIELDS__", $EXTERNAL_FIELDS, $_controller);
             $_controller = str_replace("__EXTERNAL_JOIN__", $EXTERNAL_JOIN, $_controller);
             $_controller = str_replace("__EXTERNAL_WHERE__", $EXTERNAL_WHERE, $_controller);
+            $_controller = str_replace("__TABLECOLUMNS_EXPORT_NAMES__", $TABLECOLUMNS_EXPORT_NAMES, $_controller);
 
 
 
