@@ -20,6 +20,8 @@ class queryData {
 	}
 }
 
+include('exportList.php');
+
 use Silex\Application;
 
 $app = new Application();

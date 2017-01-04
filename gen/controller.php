@@ -84,6 +84,62 @@ __TABLECOLUMNS_TYPE_ARRAY__
 });
 
 
+$app->match('/__TABLENAME__/export', function (Symfony\Component\HttpFoundation\Request $request) use ($app) {
+    $start = 0;
+    $vars = $request->query->all();
+    $searchValue = $vars["search"];
+
+    $index = $start;
+
+    $rows = array();
+
+    $table_columns = array(
+        __TABLECOLUMNS_ARRAY__
+    );
+
+    $table_columns_type = array(
+        __TABLECOLUMNS_TYPE_ARRAY__
+    );
+
+    $whereClause = "";
+
+    $i = 0;
+    foreach($table_columns as $col){
+
+        if ($i == 0) {
+            $whereClause = " WHERE";
+        }
+
+        if ($i > 0) {
+            $whereClause =  $whereClause . " OR";
+        }
+
+        $whereClause =  $whereClause . " __TABLENAME__." . $col . " LIKE '%". $searchValue ."%'";
+
+        $i = $i + 1;
+    }
+    $whereClause .= "__EXTERNAL_WHERE__";
+    $orderClause = " ORDER BY ". $table_columns[0] . " ASC";
+
+
+    $find_sql = "SELECT __TABLENAME__.* __EXTERNAL_FIELDS__ FROM `__TABLENAME__` __EXTERNAL_JOIN__". $whereClause.$orderClause;
+    $rows = $app['db']->fetchAll($find_sql, array());
+    $path = exportXls($table_columns, $rows);
+
+    $stream = function () use ($path) {
+        readfile($path);
+    };
+
+    return $app->stream($stream, 200, array(
+        'Content-Type' => 'application/vnd.ms-excel',
+        'Content-length' => filesize($path),
+        'Content-Disposition' => 'attachment; filename="file-download.xlsx"',
+        'Pragma' => 'no-cache',
+        'Expires' => '0'
+    ));
+
+});
+
 
 
 /* Download blob img */

@@ -11,11 +11,11 @@
         "symfony/validator": "2.5.*",
         "symfony/config": "2.5.*",
         "symfony/translation": "2.5.*",
-        "symfony/locale": "2.5.*"
+        "symfony/locale": "2.5.*",
+        "phpoffice/phpexcel": "^1.8"
     },
     "minimum-stability": "dev",
     "autoload": {
         "psr-0": { "": "src/" }
     }    
 }
-
