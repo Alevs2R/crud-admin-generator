@@ -19,8 +19,10 @@ function exportXls($headers, $data)
 
 
     $sheet1 = $objPHPExcel->setActiveSheetIndex(0);
-    foreach ($headers as $i=>$header) {
-        $sheet1->setCellValue($letters[$i].'1', $header);
+    $count = 0;
+    foreach ($headers as $header) {
+        $sheet1->setCellValue($letters[$count].'1', $header);
+        $count++;
     }
     foreach ($data as $row_num=>$row) {
         $count = 0;

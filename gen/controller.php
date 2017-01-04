@@ -45,18 +45,30 @@ $app->match('/__TABLENAME__/list', function (Symfony\Component\HttpFoundation\Re
     $table_columns = array(
 __TABLECOLUMNS_ARRAY__
     );
-    
+
+    $export_names = array(
+        __TABLECOLUMNS_EXPORT_NAMES__
+    );
+
     $table_columns_type = array(
 __TABLECOLUMNS_TYPE_ARRAY__
-    );    
+    );
+
+    $column_search = '';
+    foreach ($columns as $column){
+        if($column['search']['value']){
+            $column_search .= " AND {$export_names[$column['data']]} LIKE '%{$column['search']['value']}%'";
+        }
+    }
     
     $whereClause = "";
     
     $i = 0;
-    foreach($table_columns as $col){
+    foreach($table_columns as $num=>$col){
+        if($table_columns_type[$num] == 'datetime') continue;
         
         if ($i == 0) {
-           $whereClause = " WHERE";
+           $whereClause = " WHERE (";
         }
         
         if ($i > 0) {
@@ -67,7 +79,7 @@ __TABLECOLUMNS_TYPE_ARRAY__
         
         $i = $i + 1;
     }
-    $whereClause .= "__EXTERNAL_WHERE__";
+    $whereClause .= "__EXTERNAL_WHERE__ )".$column_search;
     
     $recordsTotal = $app['db']->executeQuery("SELECT __TABLENAME__.* __EXTERNAL_FIELDS__ FROM `__TABLENAME__` __EXTERNAL_JOIN__" . $whereClause . $orderClause)->rowCount();
     

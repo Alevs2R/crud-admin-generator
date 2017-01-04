@@ -285,7 +285,7 @@ $console
 							"\t" . "\$form = \$form->add('" . $table_column['name'] . "', 'text', array('required' => " . $field_nullable . "));" . "\n";
 					}
 				}
-                $TABLECOLUMNS_EXPORT_NAMES .= "\t\t" . "'". $export_name . "', \n";
+                $TABLECOLUMNS_EXPORT_NAMES .= "\t\t'" . $table_column['name'] . "' => '". $export_name . "', \n";
             }
 
 			if($count_externals > 0){
