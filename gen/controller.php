@@ -61,7 +61,11 @@ __TABLECOLUMNS_TYPE_ARRAY__
             $column_search .= ' AND (';
             foreach ($values as $i=>$v) {
                 if($i > 0) $column_search .= ' OR ';
-                $column_search .= "{$export_names[$column['data']]} LIKE '".(trim($v))."%'";
+
+                if($export_names[$column['data']] == $column['data']) $column_name = '__TABLENAME__.'.$column['data'];
+                else $column_name = $export_names[$column['data']];
+
+                $column_search .= "{$column_name} LIKE '".(trim($v))."%'";
             }
             $column_search .= ')';
         }
