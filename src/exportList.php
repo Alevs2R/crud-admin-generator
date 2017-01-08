@@ -6,6 +6,14 @@
  */
 use Symfony\Component\HttpFoundation\Response;
 
+$letters = range('A','Z');
+
+function getLetter($count){
+    global $letters;
+    if ($count < 26) return $letters[$count];
+    else return $letters[intdiv($count, 26) - 1].$letters[$count % 26];
+}
+
 function exportXls($headers, $data)
 {
     $objPHPExcel = new PHPExcel();
@@ -14,33 +22,32 @@ function exportXls($headers, $data)
     $objPHPExcel->getProperties()->setCreator("Intelligence Retail")
         ->setTitle("Экспорт таблицы");
 
-    $letters = range('A','Z');
 // Add some data
 
 
     $sheet1 = $objPHPExcel->setActiveSheetIndex(0);
     $count = 0;
     foreach ($headers as $header) {
-        $sheet1->setCellValue($letters[$count].'1', $header);
+        $sheet1->setCellValue(getLetter($count).'1', $header);
         $count++;
     }
     foreach ($data as $row_num=>$row) {
         $count = 0;
         foreach($row as $value) {
-            $cell = $letters[$count] . ($row_num+2);
+            $cell = getLetter($count) . ($row_num+2);
             $sheet1->setCellValue($cell, $value);
             $sheet1
                 ->getStyle($cell)
                 ->getAlignment()
                 ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 
-            $sheet1->getColumnDimension($letters[$count])
+            $sheet1->getColumnDimension(getLetter($count))
                 ->setAutoSize(true);
 
             $count++;
         }
     }
-    $objPHPExcel->getActiveSheet()->getStyle('A1:'.$letters[$count].'1')->getFont()->setBold(true);
+    $objPHPExcel->getActiveSheet()->getStyle('A1:'.getLetter($count).'1')->getFont()->setBold(true);
 
 
 // Rename worksheet

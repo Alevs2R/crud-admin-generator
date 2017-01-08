@@ -160,7 +160,7 @@ $app->match('/__TABLENAME__/export', function (Symfony\Component\HttpFoundation\
     return $app->stream($stream, 200, array(
         'Content-Type' => 'application/vnd.ms-excel',
         'Content-length' => filesize($path),
-        'Content-Disposition' => 'attachment; filename="file-download.xlsx"',
+        'Content-Disposition' => 'attachment; filename="__TABLENAME__.xlsx"',
         'Pragma' => 'no-cache',
         'Expires' => '0'
     ));
